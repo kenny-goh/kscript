@@ -44,7 +44,7 @@ loop(|x,y| { // This is lambda function with block
   x * y 
 });
 
-// Object oriented exampl
+// Object oriented example
 
 class Durian extends Fruit {
   taste() {
