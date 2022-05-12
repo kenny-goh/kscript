@@ -1,4 +1,4 @@
-KScript is an interpreted scripting language based on the lessons from crafting interpreters.
+KScript is an JVM-based interpreted scripting language based on the lessons from crafting interpreters.
 If you are interested in developing an intuition on how interpreter works, refer to my [learning notes](Intepreter%20-%20notes.pdf)
 
 ## Installation
@@ -86,10 +86,13 @@ Please refer to the com.gkh.lang.kscript.nativefn for examples.
 ## Todos
 - Native Array type. eg [10, 20, 30]
 - Native Map type { "hello" : 10 }
+- File support
 - Import system
 - Static methods and variables
 - Immutable variable using val
 - Optimization
+- HTTP support (Nice to have)
+- Socket support (Nice to have)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
