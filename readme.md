@@ -95,5 +95,9 @@ Please refer to the com.gkh.lang.kscript.nativefn for examples.
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 Please make sure to update tests as appropriate.
 
+## Credits
+- Plugin is based on Suvodeep Pyne's idea at  https://github.com/suvodeep-pyne
+- The code for the interpreter is mostly based on Bob Nystrom's book, 'Crafting interpreters'. I added my own flavor on top of it.
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)# kscript

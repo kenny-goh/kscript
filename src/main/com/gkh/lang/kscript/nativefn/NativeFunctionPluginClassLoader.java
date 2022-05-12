@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * Loads a plugin leveraging a {@link URLClassLoader}. However, it restricts the plugin from
  * using the system classloader thereby trimming access to all system classes.
- *
  * Only the classes in SHARED_PACKAGES are visible to the plugin.
  */
 public class NativeFunctionPluginClassLoader extends URLClassLoader {
@@ -27,7 +26,6 @@ public class NativeFunctionPluginClassLoader extends URLClassLoader {
     @Override
     protected Class<?> loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
-        // has the class loaded already?
         Class<?> loadedClass = findLoadedClass(name);
         if (loadedClass == null) {
             final boolean isSharedClass = SHARED_PACKAGES.stream().anyMatch(name::startsWith);
