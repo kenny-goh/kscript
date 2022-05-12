@@ -93,6 +93,7 @@ Please refer to the com.gkh.lang.kscript.nativefn for examples.
 - Optimization
 - HTTP support (Nice to have)
 - Socket support (Nice to have)
+- Code generation to bytecodes (Nice to have)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
