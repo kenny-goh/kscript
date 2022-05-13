@@ -18,6 +18,7 @@ public class GenerateAst {
                 "Binary     : Expr left, Token operator, Expr right",
                 "Lambda     : List<Token> params, Expr expr, List<Stmt> block",
                 "Call       : Expr callee, Token paren, List<Expr> arguments",
+                "Index      : Expr array, Integer from, Integer To",
                 "Get        : Expr object, Token name",
                 "Grouping   : Expr expression",
                 "Literal    : Object value",
@@ -26,6 +27,7 @@ public class GenerateAst {
                 "Super      : Token keyword, Token method",
                 "This       : Token keyword",
                 "Variable   : Token name",
+                "Array      : List<Expr> elements",
                 "Unary      : Token operator, Expr right"
         ));
         defineAst(outputDir, "Stmt", Arrays.asList(

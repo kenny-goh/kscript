@@ -144,11 +144,25 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitArrayExpr(Expr.Array expr) {
+        for (Expr element: expr.elements) {
+            resolve(element);
+        }
+        return null;
+    }
+
+    @Override
     public Void visitCallExpr(Expr.Call expr) {
         resolve(expr.callee);
         for (Expr argument: expr.arguments) {
             resolve(argument);
         }
+        return null;
+    }
+
+    @Override
+    public Void visitIndexExpr(Expr.Index expr) {
+        resolve(expr.array);
         return null;
     }
 

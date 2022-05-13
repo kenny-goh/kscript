@@ -310,14 +310,33 @@ public class Parser {
             if (match((TokenType.LEFT_PAREN))) {
                 expr = finishCall(expr);
             } else if (match(TokenType.DOT)) {
-              Token name = consume(TokenType.IDENTIFIER, "Expect a property after '.'.");
-              expr = new Expr.Get(expr, name);
-            } else {
+                Token name = consume(TokenType.IDENTIFIER, "Expect a property after '.'.");
+                expr = new Expr.Get(expr, name);
+            } else if (match(TokenType.LEFT_SQUARE_BRACKET)) {
+                expr = finishIndexing(expr);
+            }
+            else {
                 break;
             }
         }
         return expr;
     }
+
+
+//    private Expr call() {
+//        Expr expr = primary();
+//        for(;;) {
+//            if (match((TokenType.LEFT_PAREN))) {
+//                expr = finishCall(expr);
+//            } else if (match(TokenType.DOT)) {
+//              Token name = consume(TokenType.IDENTIFIER, "Expect a property after '.'.");
+//              expr = new Expr.Get(expr, name);
+//            } else {
+//                break;
+//            }
+//        }
+//        return expr;
+//    }
 
     private Expr finishCall(Expr callee) {
         List<Expr> arguments = new ArrayList<>();
@@ -333,32 +352,58 @@ public class Parser {
         return new Expr.Call(callee, paren, arguments);
     }
 
+    private Expr finishIndexing(Expr expr) {
+        Integer number = 0;
+        if (match(TokenType.NUMBER)) {
+           Token numToken = previous();
+           number = ((Double) numToken.literal).intValue();
+        } else {
+            error(previous(), "Expect a number after '[' for accessing array.");
+        }
+        Token last = consume(TokenType.RIGHT_SQUARE_BRACKET, "Expect ']' after accessing array.");
+        return new Expr.Index(last, expr, number, null);
+    }
+
     private Expr primary() {
         if (match(TokenType.FALSE)) return new Expr.Literal(false);
-        if (match(TokenType.TRUE)) return new Expr.Literal(true);
-        if (match(TokenType.NIL)) return new Expr.Literal(null);
-        if (match(TokenType.NUMBER, TokenType.STRING)) {
+        else if (match(TokenType.TRUE)) return new Expr.Literal(true);
+        else if (match(TokenType.NIL)) return new Expr.Literal(null);
+        else if (match(TokenType.NUMBER, TokenType.STRING)) {
             return new Expr.Literal(previous().literal);
         }
-        if (match(TokenType.SUPER)) {
+        else if (match(TokenType.SUPER)) {
             Token keyword = previous();
             consume(TokenType.DOT, "Expect a '.' after super.");
             Token method = consume(TokenType.IDENTIFIER, "Expect a superclass method name.");
             return new Expr.Super(keyword, method);
         }
-        if (match(TokenType.THIS)) {
+        else if (match(TokenType.THIS)) {
             return new Expr.This(previous());
         }
-        if (match(TokenType.IDENTIFIER)) {
+        else if (match(TokenType.IDENTIFIER)) {
             return new Expr.Variable(previous());
         }
-        if (match(TokenType.LEFT_PAREN)) {
+        else if (match(TokenType.LEFT_PAREN)) {
             Expr expr = expression();
             consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
-        if (match(TokenType.PIPE)) return finishLambda();
+        else if (match(TokenType.LEFT_SQUARE_BRACKET)) {
+            return array();
+        }
+        else if (match(TokenType.PIPE)) return finishLambda();
         throw error(peek(), "Expect expression.");
+    }
+
+    private Expr array() {
+        List elements = new ArrayList();
+        if (!check(TokenType.RIGHT_SQUARE_BRACKET)) {
+            do {
+                elements.add(expression());
+            } while (match(TokenType.COMMA));
+        }
+        consume(TokenType.RIGHT_SQUARE_BRACKET, "Expect ']' after array");
+        return new Expr.Array(elements);
     }
 
     private Expr expression() {

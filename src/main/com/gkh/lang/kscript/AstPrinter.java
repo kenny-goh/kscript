@@ -68,8 +68,18 @@ public class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitArrayExpr(Expr.Array expr) {
+        return parenthesize("array");
+    }
+
+    @Override
     public String visitCallExpr(Expr.Call expr) {
         return parenthesize("function", expr.callee);
+    }
+
+    @Override
+    public String visitIndexExpr(Expr.Index expr) {
+        return null;
     }
 
     @Override

@@ -16,15 +16,17 @@ import java.util.List;
  * operator -> “==” | “!=” | “<” | “<=” | “>” | “>=” | “+” | “-” | “*” | “/”;
  * primary -> number | string | “true” | “false” | “nil” | “(“ expression “)”;
  * arguments -> expression ( "," expression )*
+ * array -> "[" + arguments + "]";
  * call-> primary "("  arguments? ")" block
  *
  */
-abstract class Expr {
+public abstract class Expr {
     interface Visitor<R> {
         R visitAssignExpr(Assign expr);
         R visitBinaryExpr(Binary expr);
         R visitLambdaExpr(Lambda expr);
         R visitCallExpr(Call expr);
+        R visitIndexExpr(Index expr);
         R visitGetExpr(Get expr);
         R visitGroupingExpr(Grouping expr);
         R visitLiteralExpr(Literal expr);
@@ -33,6 +35,7 @@ abstract class Expr {
         R visitSuperExpr(Super expr);
         R visitThisExpr(This expr);
         R visitVariableExpr(Variable expr);
+        R visitArrayExpr(Array expr);
         R visitUnaryExpr(Unary expr);
     }
     static class Assign extends Expr {
@@ -92,6 +95,22 @@ abstract class Expr {
         final Expr callee;
         final Token paren;
         final List<Expr> arguments;
+    }
+    static class Index extends Expr {
+        Index(Token keyword,Expr array, Integer from, Integer To) {
+            this.keyword = keyword;
+            this.array = array;
+            this.from = from;
+            this.To = To;
+        }
+
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIndexExpr(this);
+        }
+        final Token keyword;
+        final Expr array;
+        final Integer from;
+        final Integer To;
     }
     static class Get extends Expr {
         Get(Expr object, Token name) {
@@ -193,6 +212,17 @@ abstract class Expr {
 
         final Token name;
     }
+    static class Array extends Expr {
+        Array(List<Expr> elements) {
+            this.elements = elements;
+        }
+
+        @Override <R> R accept(Visitor<R> visitor) {
+            return visitor.visitArrayExpr(this);
+        }
+
+        final List<Expr> elements;
+    }
     static class Unary extends Expr {
         Unary(Token operator, Expr right) {
             this.operator = operator;
@@ -209,4 +239,3 @@ abstract class Expr {
 
     abstract <R> R accept(Visitor<R> visitor);
 }
-

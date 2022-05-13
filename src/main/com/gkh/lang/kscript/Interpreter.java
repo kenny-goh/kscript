@@ -60,18 +60,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
-    private String stringify(Object object) {
-        if (object == null) return "nil";
-        if (object instanceof Double) {
-            String text = object.toString();
-            if (text.endsWith(".0")) {
-                text = text.substring(0, text.length() - 2);
-            }
-            return text;
-        }
-        return object.toString();
-    }
-
     @Override
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);
@@ -119,8 +107,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 if (left instanceof Double && right instanceof Double) {
                     return (double) left + (double) right;
                 }
-                if (left instanceof String && right instanceof String) {
+                else if (left instanceof String && right instanceof String) {
                     return left + (String) right;
+                }
+                else if (left instanceof KList && right instanceof KList) {
+                    return ((KList) left).extend((KList) right);
                 }
                 throw new RuntimeError(expr.operator, "Operands must be two numbers of strings");
         }
@@ -205,6 +196,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return lookupVariable(expr.name, expr);
     }
 
+
     private Object lookupVariable(Token name, Expr expr) {
         Integer distance = locals.get(expr);
         if (distance != null) {
@@ -232,10 +224,36 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitIndexExpr(Expr.Index expr) {
+        Object array = evaluate(expr.array);
+        if (!(array instanceof  KList)) {
+            throw new RuntimeError(expr.keyword, "Can only access index on array");
+        }
+        KList list = (KList)array;
+        return list.get(expr.from);
+    }
+
+    @Override
+    public Object visitArrayExpr(Expr.Array expr) {
+        List elements = new ArrayList();
+        for (Expr each: expr.elements) {
+            elements.add(evaluate(each));
+        }
+        return new KList(elements);
+    }
+
+    @Override
     public Object visitGetExpr(Expr.Get expr) {
         Object object = evaluate(expr.object);
         if (object instanceof KlassInstance) {
             return ((KlassInstance) object).get(expr.name);
+        }
+        else if (object instanceof KList) {
+            KList list = (KList) object;
+            Callable function = list.getFunction(expr.name);
+            if (function == null)
+                throw new RuntimeError(expr.name, "Unsupported function for array: " + expr.name.lexeme);
+            return function;
         }
         throw new RuntimeError(expr.name, "Only instances have properties.");
     }
@@ -262,7 +280,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return true;
     }
 
-    private Object evaluate(Expr expr) {
+    public Object evaluate(Expr expr) {
         return expr.accept(this);
     }
 
@@ -318,7 +336,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
-        System.out.println(stringify(value));
+        System.out.println(Utils.stringify(value));
         return null;
     }
 
