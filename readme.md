@@ -6,7 +6,7 @@ The language currently supports the following features:
 - Syntax is a mix of Java and Python
 - Lambda function ( e.g  | x | x * x )
 - List data structure ( e.g [0,1,2,3] )
-- Extensible native functions ( You can add 'java' functions using the plugins. See [below](##Plugins for extending native functions) )
+- Extensible native functions ( You can add 'java' functions using the plugins. See [below](#plugins-for-extending-native-functions) )
 
 If you are interested in developing an intuition on how interpreter works, refer to my [learning notes](Intepreter%20-%20notes.pdf)
 
