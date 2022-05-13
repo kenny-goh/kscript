@@ -67,6 +67,7 @@ print "Durian:";
 Durian().taste();
 
 ```
+For more examples, please refer to demo subdirectory
 
 ## Plugins for extending native functions
 
@@ -84,11 +85,11 @@ Please refer to the com.gkh.lang.kscript.nativefn for examples.
 
 
 ## Todos
-- Native Array type. eg [10, 20, 30]
+- Range (0..10)
 - Native Map type { "hello" : 10 }
 - File support
 - Import system
-- Static methods and variables
+- Static methods 
 - Immutable variable using val
 - Optimization
 - HTTP support (Nice to have)
@@ -101,7 +102,7 @@ Please make sure to update tests as appropriate.
 
 ## Credits
 - Plugin is based on Suvodeep Pyne's idea at  https://github.com/suvodeep-pyne
-- The code for the interpreter is mostly based on Bob Nystrom's book, 'Crafting interpreters'. I added my own flavor on top of it.
+- The code for the interpreter is mostly based on Bob Nystrom's book, 'Crafting interpreters'. I added my own flavor on top of it such as having lambda functions, lists, map, quantors and so on.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)# kscript

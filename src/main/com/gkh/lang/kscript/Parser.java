@@ -354,14 +354,15 @@ public class Parser {
 
     private Expr finishIndexing(Expr expr) {
         Integer number = 0;
-        if (match(TokenType.NUMBER)) {
-           Token numToken = previous();
-           number = ((Double) numToken.literal).intValue();
-        } else {
-            error(previous(), "Expect a number after '[' for accessing array.");
-        }
+        Expr fromIndex = expression();
+//        if (match(expression())) {
+//           Token numToken = previous();
+//           number = ((Double) numToken.literal).intValue();
+//        } else {
+//            error(previous(), "Expect a number after '[' for accessing array.");
+//        }
         Token last = consume(TokenType.RIGHT_SQUARE_BRACKET, "Expect ']' after accessing array.");
-        return new Expr.Index(last, expr, number, null);
+        return new Expr.Index(last, expr, fromIndex, null);
     }
 
     private Expr primary() {

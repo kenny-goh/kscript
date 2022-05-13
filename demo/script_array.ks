@@ -17,5 +17,9 @@ print list.copy();
 print list.reverse();
 print list.map(|x| x * x);
 
+print [1,2,3,4,5,6,7,8,9,10].subList(0,5);
 
+print max([1,5,100,200,50]);
+print min([1,5,100,200,50]);
+print sum([1,5,100,200,50]);
 

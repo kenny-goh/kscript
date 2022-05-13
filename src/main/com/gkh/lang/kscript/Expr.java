@@ -97,11 +97,11 @@ public abstract class Expr {
         final List<Expr> arguments;
     }
     static class Index extends Expr {
-        Index(Token keyword,Expr array, Integer from, Integer To) {
+        Index(Token keyword,Expr array, Expr from, Expr to) {
             this.keyword = keyword;
             this.array = array;
             this.from = from;
-            this.To = To;
+            this.to = to;
         }
 
         @Override <R> R accept(Visitor<R> visitor) {
@@ -109,8 +109,8 @@ public abstract class Expr {
         }
         final Token keyword;
         final Expr array;
-        final Integer from;
-        final Integer To;
+        final Expr from;
+        final Expr to;
     }
     static class Get extends Expr {
         Get(Expr object, Token name) {

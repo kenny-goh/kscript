@@ -4,6 +4,7 @@ import com.gkh.lang.kscript.enums.TokenType;
 import com.gkh.lang.kscript.exceptions.RuntimeError;
 import com.gkh.lang.kscript.nativefn.NativeFunctionFactory;
 import com.gkh.lang.kscript.nativefn.NativeFunctionPluginLoader;
+import com.gkh.lang.kscript.types.KList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -230,7 +231,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             throw new RuntimeError(expr.keyword, "Can only access index on array");
         }
         KList list = (KList)array;
-        return list.get(expr.from);
+        Double fromIndex = (Double) evaluate(expr.from);
+        return list.get(fromIndex.intValue());
     }
 
     @Override
@@ -250,7 +252,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
         else if (object instanceof KList) {
             KList list = (KList) object;
-            Callable function = list.getFunction(expr.name);
+            Callable function = list.getMethod(expr.name);
             if (function == null)
                 throw new RuntimeError(expr.name, "Unsupported function for array: " + expr.name.lexeme);
             return function;

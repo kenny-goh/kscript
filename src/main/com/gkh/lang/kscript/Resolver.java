@@ -163,6 +163,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitIndexExpr(Expr.Index expr) {
         resolve(expr.array);
+        resolve(expr.from);
+        if (expr.to != null) resolve(expr.to);
         return null;
     }
 
